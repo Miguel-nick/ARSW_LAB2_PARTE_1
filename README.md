@@ -148,3 +148,44 @@ Incluye compilación y ejecución de pruebas JUnit. Si tienes análisis estátic
 Este laboratorio es una adaptación modernizada del ejercicio **SnakeRace** de ARSW. El enunciado de actividades se conserva para mantener los objetivos pedagógicos del curso.
 
 **Base construida por el Ing. Javier Toquica.**
+
+---
+
+**Reporte — Parte I (Ejercicio wait/notify)**
+
+- **Objetivo breve:** hacer que varios hilos busquen números primos en paralelo, y que cada cierto tiempo (t ms) el programa pause todos los hilos, muestre cuántos primos se han encontrado y espere ENTER para reanudar.
+
+- **Qué implementé:** añadí un pequeño programa en `src/main/java/co/eci/prime/` con dos clases:
+  - `PrimeFinder`: arranca los hilos trabajadores, cada `t` ms solicita la pausa, muestra el conteo y espera ENTER para reanudar.
+  - `PrimeWorker`: cada hilo toma números para comprobar y aumenta el contador cuando encuentra un primo.
+
+- **Cómo se pausa y se reanuda (explicación simple):**
+  - Todos los hilos usan el mismo objeto como "cerradura" (monitor). Cuando toca pausar, el hilo principal pone una señal de pausa y los trabajadores se quedan esperando sin consumir CPU (se bloquean). Al pulsar ENTER el hilo principal quita la señal y despierta a todos.
+  - Técnicamente esto se hace con `synchronized` sobre ese objeto y las llamadas `wait()` (trabajadores) y `notifyAll()` (hilo principal). El resultado: no hay "esperas activas" que malgasten CPU.
+
+- **Por qué esto evita problemas comunes:**
+  - Se usa un único monitor para coordinar, por lo que no se corrige información entre distintos candados.
+  - Los trabajadores usan `while (paused) wait()` para protegerse de reactivaciones espurias y evitar condiciones de carrera al entrar/ salir de la pausa.
+
+- **Pruebas realizadas:**
+  - El proyecto compila con `mvn -DskipTests compile`.
+  - Ejecuté el programa y verifiqué que cada intervalo pausa, muestra el número de primos encontrados y espera la tecla ENTER para reanudar. También comprobé que no hay busy-waiting y que la reanudación despierta a todos los hilos.
+
+- **Cómo ejecutar (ejemplo):**
+```bash
+mvn -DskipTests compile
+java -Dthreads=4 -Dt=2000 -cp target/classes co.eci.prime.PrimeFinder
+```
+
+- **Archivos añadidos/modificados importantes:**
+  - `src/main/java/co/eci/prime/PrimeFinder.java` (programa principal, con comentarios en español)
+  - `src/main/java/co/eci/prime/PrimeWorker.java` (trabajador, con comentarios en español)
+  - `README.md` (este reporte agregado al final)
+
+- **Notas finales:** el diseño busca ser mínimo y seguro: sólo se protege la región necesaria para la pausa/reanudación (no hay bloqueos largos), y se evita busy-wait. La parte práctica del ejercicio (pausar cada t ms, mostrar conteo y esperar ENTER) está implementada y probada.
+
+**Resumen sencillo de lo hecho (una frase):**
+- Creamos un programa que lanza hilos que buscan primos, lo pausa periódicamente mostrando cuántos primos hay y espera ENTER para seguir; la pausa usa el mecanismo estándar de monitores en Java evitando esperas activas.
+
+
+---
