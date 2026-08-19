@@ -154,6 +154,8 @@ Este laboratorio es una adaptación modernizada del ejercicio **SnakeRace** de A
 
 # SOLUCION REPORTE DE LABORATORIO
 
+**Estudiantes** : Laura Castillo, Miguel Sandoval
+
 **Reporte — Parte I (Ejercicio wait/notify)**
 
 - **Objetivo breve:** hacer que varios hilos busquen números primos en paralelo, y que cada cierto tiempo (t ms) el programa pause todos los hilos, muestre cuántos primos se han encontrado y espere ENTER para reanudar.
