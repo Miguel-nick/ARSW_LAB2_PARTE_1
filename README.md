@@ -154,8 +154,7 @@ Este laboratorio es una adaptación modernizada del ejercicio **SnakeRace** de A
 
 # SOLUCION REPORTE DE LABORATORIO
 
-**Estudiantes** : Laura Castillo
-                  Miguel Sandoval
+**Estudiantes** : Laura Castillo, Miguel Sandoval
 
 **Reporte — Parte I (Ejercicio wait/notify)**
 
